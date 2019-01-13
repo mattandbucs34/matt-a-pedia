@@ -1,0 +1,44 @@
+{
+  "name": "matt-a-pedia",
+  "version": "1.0.0",
+  "description": "a wikipedia style application full of information to astound",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "export NODE_ENV=test|| set NODE_ENV=test&& jasmine",
+    "start": "node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattandbucs34/matt-a-pedia.git"
+  },
+  "author": "Matt Johnson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattandbucs34/matt-a-pedia/issues"
+  },
+  "homepage": "https://github.com/mattandbucs34/matt-a-pedia#readme",
+  "devDependencies": {
+    "faker": "^4.1.0",
+    "jasmine": "^3.3.0",
+    "request": "^2.83.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "cryptiles": "^4.1.3",
+    "dotenv": "^6.2.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-flash": "0.0.2",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.3.1",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "pg": "^7.8.0",
+    "pg-hstore": "^2.3.2",
+    "save": "^2.3.3",
+    "sequelize": "^4.42.0",
+    "sequelize-cli": "^5.4.0"
+  }
+}
