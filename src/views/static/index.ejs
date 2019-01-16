@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <% include ./partials/head.ejs %>
+  </head>
+  <body>
+
+    <!-- Navigation -->
+    <% include ./partials/navbar.ejs %>
+
+    <!-- Page Content -->
+    <main class="container">
+      <!-- <% include ./partials/messages.ejs %> -->
+      <!-- Jumbotron Header -->
+      <header class="jumbotron my-4">
+        <h1 class="display-3">Matt-A-Pedia!</h1>
+        <p class="lead">A site about all things Matt</p>
+        <a href="/users/sign-up" class="btn btn-primary btn-lg">Sign Up</a>
+      </header>
+
+      <!-- Page Features -->
+      <section class="row text-center">
+
+        <section class="col-lg-4">
+          <h4 class="card-title">Accounts</h4>
+          <p class="card-text">Peruse the site as a basic member or sign up as a Premium user for a more rich experience</p>
+        </section>
+
+        <section class="col-lg-4">
+          <h4 class="card-title">Create</h4>
+          <p class="card-text">Premium members can create private information about a Matt</p>
+        </section>
+
+        <section class="col-lg-4">
+          <h4 class="card-title">Stay Informed</h4>
+          <p class="card-text">Want to know all about Matt? We have you covered!</p>
+        </section>
+
+      </section>
+      <!-- end of row-->
+
+      <!-- include the About Us partial -->
+      
+    </main>
+    <!-- end of container -->
+
+    <% include ./partials/baseScripts.ejs %>
+  </body>
+</html>
