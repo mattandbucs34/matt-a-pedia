@@ -1,6 +1,7 @@
-const userQueries = require("../db/queries/userQueries");
+const userQueries = require("../db/queries/userQueries.js");
 const passport = require("passport");
 const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 module.exports = {
 
@@ -13,9 +14,17 @@ module.exports = {
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
-      passwordConfirmation: req.body.passwordConfirmation
+      passwordConfirmation: req.body.confirmPW
     };
 
+    const msg = {
+      to: req.body.email,
+      from: 'mattandbucs@gmail.com',
+      subject: 'Matt-a-Pedia Registration',
+      text: 'Thank you for registering for Matt-a-pedia. We are glad you joined us!',
+      html: '<strong>Thank you for registering for Matt-a-pedia. We are glad you joined us!</strong>'
+    };
+    
     userQueries.createUser(newUser, (err, user) => {
       if(err) {
         req.flash("error", err);
@@ -25,6 +34,7 @@ module.exports = {
           req.flash("notice", "You've successfully created an account!");
           res.redirect("/");
         });
+        sgMail.send(msg);
       }
     });
   },

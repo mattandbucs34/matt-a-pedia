@@ -9,7 +9,7 @@ module.exports = {
     app.use(passport.session());
 
     passport.use(new LocalStrategy({
-      emailField: "email"
+      usernameField: "email"
     }, (email, password, done) => {
       User.findOne({
         where: {email}
