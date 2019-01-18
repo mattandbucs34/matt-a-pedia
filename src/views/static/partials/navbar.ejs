@@ -15,6 +15,18 @@
         <li class="nav-item">
           <a class="nav-link" href="#">About Us</a>
         </li>
+        <% if(currentUser) { %>
+          <li class="nav-item">
+            <a href="/users/sign-out" class="nav-link">Sign Out</a>
+          </li>
+        <% }else { %>
+          <li class="nav-item">
+            <a href="/users/sign-up" class="nav-link">Sign Up</a>
+          </li>
+          <li class="nav-item">
+            <a href="/users/sign-in" class="nav-link">Sign In</a>
+          </li>
+        <% } %>
       </ul>
     </div>
   </div>
