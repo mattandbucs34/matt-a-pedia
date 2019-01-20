@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <% include ../static/partials/header.ejs %>
+  <% include ../static/partials/head.ejs %>
 </head>
 <body>
   <% include ../static/partials/navbar.ejs %>
@@ -17,11 +17,19 @@
         <input type="text" class="form-control" name="title" aria-describedby="titleHelp" placeholder="Enter Title">
         <small class="text-muted" id="titleHelp">Title must be 5 or more characters</small>
       </div>
-      <div>
+      <div class="form-group">
         <label for="wikiBody">Wiki Information:</label>
         <textarea name="wikiBody" cols="30" rows="10" class="form-control" placeholder="Enter Wiki Information"></textarea>
         <small class="text-muted" id="wikiBodyHelp">Wiki Information must be more than 10 characters</small>
       </div>
+      <% if(currentUser.isPremium()) { %>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="customCheck1">
+            <label class="custom-control-label" for="customCheck1">Check this custom checkbox</label>
+          </div>
+        </div>
+      <% } %>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </main>
