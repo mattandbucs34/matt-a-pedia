@@ -2,17 +2,17 @@
 module.exports = (sequelize, DataTypes) => {
   var Wikis = sequelize.define('Wikis', {
     title: {
-      type:DataTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false
     },
-
     body: {
       type: DataTypes.STRING,
       allowNull: false
     },
     private: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: false,
+      defaultValue: false
     },
     userId: {
       type: DataTypes.INTEGER,

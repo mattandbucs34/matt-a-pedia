@@ -18,7 +18,8 @@ describe("Wiki", () => {
         Wiki.create({
           title: "Inaugural Post about Matt",
           body: "When he was a young warthog...",
-          private: false
+          private: false,
+          userId: this.user.id
         }).then((wiki) => {
           this.wiki = wiki;
           done();
@@ -32,14 +33,28 @@ describe("Wiki", () => {
       Wiki.create({
         title: "Live action better than the real thing",
         body: "Simba was great as a cartoon, but live action will be amazing!",
-        private: false
+        private: false,
+        userId: this.user.id
       }).then((wiki) => {
+        console.log(wiki.body);
         expect(wiki.title).toBe("Live action better than the real thing");
         expect(wiki.body).toBe("Simba was great as a cartoon, but live action will be amazing!");
         expect(wiki.private).toBe(false);
         done();
       }).catch((err) => {
-        console.log(err);
+        console.log("Uh Oh");
+        done();
+      });
+    });
+
+    it("should not create a Wiki with a missing title or body", (done) => {
+      Wiki.create({
+        userId: this.user.id
+      }).then((wiki) => {
+        done();
+      }).catch((err) => {
+        expect(err.message).toContain("Wikis.title cannot be null");
+        expect(err.message).toContain("Wikis.body cannot be null");
         done();
       });
     });
