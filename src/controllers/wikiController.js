@@ -74,7 +74,7 @@ module.exports = {
         res.redirect(404, "/");
       }else {
         const authorized = new Authorizer(req.user, wiki).edit();
-
+        
         if(authorized) {
           res.render("wikis/edit", {wiki});
         }else {

@@ -160,4 +160,49 @@ describe("routes : wikis", () => {
       });
     });
   });
+
+  describe("signed in user attempting CRUD operations on other user wikis", () => {
+    beforeEach((done) => {
+      request.get({
+        url: "http://localhost:3000/auth/fake",
+        form: {
+          userId: 42
+        }
+      }, (err, res, body) => {
+        done();
+      });
+    });
+
+    describe("GET /wikis/:id/edit", () => {
+      it("should not render the edit view if the user does not own Wiki", (done) => {
+        request.get(`${base}/${this.wiki.id}/edit`, (err, res, body) => {
+          expect(err).toBeNull();
+          expect(body).not.toContain("Edit Wiki");
+          done();
+        });
+      });
+    });
+
+    describe("POST /wikis/:id/post", () => {
+      it("should not update a wiki with an incorrect user id", (done) => {
+        const options = {
+          url: `${base}/${this.wiki.id}/update`,
+          form: {
+            title: "Excellent Wiki!",
+            wikiBody: "Too-ra-lay, too-ra-loo"
+          }
+        };
+
+        request.post(options, (err, res, body) => {
+          expect(err).toBeNull();
+          Wiki.findOne({
+            where: {id: 1}
+          }).then((wiki) => {
+            expect(wiki.title).toBe("Inaugural Post about Matt");
+            done();
+          });
+        });
+      });
+    });
+  });
 });
