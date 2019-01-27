@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../static/partials/head.ejs %>
+</head>
+<body>
+  <main>
+    <% include ../static/partials/navbar.ejs %>
+
+    <form action="/users/charge" method="POST">
+      <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        class="stripe-button"
+        data-key="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
+        data-image="/square-image.png"
+        data-name="Demo Site"
+        data-description="2 widgets ($20.00)"
+        data-amount="2000"
+        data-zip-code="true">
+      </script>
+    </form>
+
+  </main>
+  <% include ../static/partials/baseScripts.ejs %>
+</body>
+</html>
+

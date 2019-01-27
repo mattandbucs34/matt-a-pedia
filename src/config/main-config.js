@@ -29,5 +29,9 @@ module.exports = {
       res.locals.currentUser = req.user;
       next();
     });
+
+    app.use(express.static("public"));
+    app.use(bodyParser.urlencoded({extended: false}));
+    app.use(bodyParser.json());
   }
 };

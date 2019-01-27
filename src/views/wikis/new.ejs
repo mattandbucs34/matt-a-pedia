@@ -22,14 +22,14 @@
         <textarea name="wikiBody" cols="30" rows="10" class="form-control" placeholder="Enter Wiki Information"></textarea>
         <small class="text-muted" id="wikiBodyHelp">Wiki Information must be more than 10 characters</small>
       </div>
-      
+      <% if(currentUser.isPremium()) { %>
         <div class="form-group">
           <div class="custom-control custom-checkbox">
             <input type="checkbox" class="custom-control-input" id="checkPrivate" name="private">
             <label class="custom-control-label" for="customCheck1">Click to make Wiki Private</label>
           </div>
         </div>
-      
+      <% } %>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </main>

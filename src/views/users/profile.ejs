@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../static/partials/head.ejs %>
+  <script src="https://checkout.stripe.com/checkout.js"></script>
+</head>
+<body>
+  <% include ../static/partials/navbar.ejs %>
+
+  <main class="container">
+    <% include ../static/partials/messages.ejs %>
+    <h2>Membership</h2>
+    <hr>
+    <% if(currentUser.isPremium()) { %>
+      <form action="/users/<%= user.id %>/downgrade" method="POST">
+        <div class="form-group">
+          <p>
+            <strong>Membership Type:</strong>&nbsp;<%= user.role %>
+          </p>
+          <button class="btn btn-danger" id="downgradeButton">Downgrade</button>
+        </div>
+      </form>
+    <% }else { %>
+      <form action="/users/<%= user.id %>/upgrade" method="POST">
+        <div class="form-group">
+          <p>
+            <strong>Membership Type:</strong>&nbsp;<%= user.role %>
+          </p>
+          <button type="submit" class="btn btn-success" id="upgradeButton">Upgrade</button>          
+        </div>
+      </form>
+    <% } %>
+  </main>
+
+  <% include ../static/partials/baseScripts.ejs %>
+  <!-- script to process credit card for membership upgrade -->
+  
+  <script>
+    let handler = StripeCheckout.configure({
+      key: "pk_test_uq4sAcMvuGqDVUuEsJp9yT8C",
+      image: "https://stripe.com/img/documentation/checkout/marketplace.png",
+      locale: "auto",
+      zipCode: true,
+      token: function(token) {
+        fetch("/charge", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(token)
+        }).then((response) => {
+          if(!response.ok){
+            throw response;
+          }
+          return response.json();
+        }).then((output) => {
+          console.log("Purchase succeeded:", output);
+        }).catch((err) => {
+          console.log("Purchase failed:", err);
+        });
+      }
+    });
+
+    document.querySelector("#upgradeButton").addEventListener("click", function(e) {
+      handler.open({
+        name: "Matt-a-Pedia",
+        description: "Upgrade Membership",
+        amount: 1500
+      });
+      e.preventDefault();
+    });
+
+    window.addEventListener("popstate", function() {
+      handler.close();
+    });
+  </script>
+</body>
+</html>
