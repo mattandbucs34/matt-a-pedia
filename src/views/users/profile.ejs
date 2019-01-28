@@ -43,6 +43,7 @@
       zipCode: true,
       panelLabel: "Upgrade Membership",
       token: function(token) {
+        console.log(token);
         fetch("/charge", {
           method: "POST",
           headers: {"Content-Type": "application/json"},

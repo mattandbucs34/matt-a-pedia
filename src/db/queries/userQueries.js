@@ -45,6 +45,9 @@ module.exports = {
       currency: 'usd',
       source: req.body.id
     }).then((charge) => {
+      User.findByPk(req.user.id).then((user) => {
+        user.update({role: "premium"});
+      });
       callback(null, charge);
     }).catch((err) => {
       callback(err);

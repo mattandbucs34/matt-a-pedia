@@ -75,20 +75,10 @@ module.exports = {
 
   charge(req, res, next) {
     userQueries.chargeUser(req, (err, charge) => {
-      if(err || charge === undefined) {
-        req.flash("notice", "Upgrade failed");
-        res.redirect("/");
+      if(err || charge == null) {
+        res.redirect(401, `/users/${req.user.id}`);
       }else {
-        userQueries.upgradeUser(req, (err, user) => {
-          if(err || user === undefined) {
-            req.flash("notice", "Your request to upgrade has been denied");
-            res.redirect("/");
-          }else {
-            req.flash("success", "Your account has been upgraded to Premium");
-            //res.render("/");
-          }
-        });
-        res.redirect("/");
+        res.redirect(303, `/users/${req.user.id}`);
       }
     }); 
   },
@@ -100,7 +90,7 @@ module.exports = {
         res.redirect(`/users/${req.params.id}`);
       }else {
         req.flash("success", "You have upgraded to a Premium Account!");
-        res.redirect(`/users/${req.params.id}`);
+        res.render(`/users/${req.params.id}`);
       }
     });
   },
