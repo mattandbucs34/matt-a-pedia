@@ -21,14 +21,14 @@
         </div>
       </form>
     <% }else { %>
-      <form action="/users/<%= user.id %>/upgrade" method="POST">
+      <!-- <form action="/users/<%= user.id %>/upgrade" method="POST"> -->
         <div class="form-group">
           <p>
             <strong>Membership Type:</strong>&nbsp;<%= user.role %>
           </p>
           <button type="submit" class="btn btn-success" id="upgradeButton">Upgrade</button>          
         </div>
-      </form>
+      <!-- </form> -->
     <% } %>
   </main>
 
@@ -41,6 +41,7 @@
       image: "https://stripe.com/img/documentation/checkout/marketplace.png",
       locale: "auto",
       zipCode: true,
+      panelLabel: "Upgrade Membership",
       token: function(token) {
         fetch("/charge", {
           method: "POST",
@@ -62,8 +63,8 @@
     document.querySelector("#upgradeButton").addEventListener("click", function(e) {
       handler.open({
         name: "Matt-a-Pedia",
-        description: "Upgrade Membership",
-        amount: 1500
+        description: "Upgrade Membership: $15.00",
+        amount: 1500,
       });
       e.preventDefault();
     });

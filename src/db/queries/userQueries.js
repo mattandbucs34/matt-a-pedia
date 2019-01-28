@@ -1,6 +1,11 @@
 const User = require("../models").User;
 const bcrypt = require("bcryptjs");
 const Authorizer = require("../../policies/application");
+const testKey = process.env.STRIPE_TEST_KEY;
+const secretKey = process.env.STRIPE_SECRET_KEY;
+const stripe = require("stripe")("sk_test_fqLhMCXdoWadGFZcMXuURp3q");
+
+
 
 module.exports = {
   createUser(newUser, callback) {
@@ -21,7 +26,7 @@ module.exports = {
 
   getUser(id, callback) {
     let result = {};
-    User.findById(id).then((user) => {
+    User.findByPk(id).then((user) => {
       if(!user) {
         callback(404);
       }else {
@@ -33,22 +38,30 @@ module.exports = {
     });
   },
 
-  upgradeUser(id, callback) {
-    return User.findById(id).then((user) => {
-      if(!user){
-        return callback("User not found");
-      }else {
-        return user.update({ role: "premium"}).then(() => {
-          callback(null, user);
-        }).catch((err) => {
-          callback(err);
-        });
-      };
+  chargeUser(req, callback) {
+    stripe.charges.create({
+      amount: 1500,
+      description: "Premium Membership",
+      currency: 'usd',
+      source: req.body.id
+    }).then((charge) => {
+      callback(null, charge);
+    }).catch((err) => {
+      callback(err);
+    });
+  },
+
+  upgradeUser(req, callback) {
+    User.findOne({where: {email: req.body.email}}).then((user) => {
+      user.update({role: "premium"});
+      callback(null, user);
+    }).catch((err) => {
+      callback(err);
     });
   },
 
   downgradeUser(id, callback) {
-    return User.findById(id).then((user) => {
+    return User.findByPk(id).then((user) => {
       if(!user) {
         return callback("User not found");
       }else {

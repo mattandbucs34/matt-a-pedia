@@ -25,3 +25,20 @@
 </body>
 </html>
 
+function(token) {
+  fetch("/upgrade", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(token)
+  }).then((response) => {
+    if(!response.ok){
+      throw response;
+    }
+    return response.json();
+  }).then((output) => {
+    console.log("Purchase succeeded:", output);
+  }).catch((err) => {
+    console.log("Purchase failed:", err);
+  });
+}
+
