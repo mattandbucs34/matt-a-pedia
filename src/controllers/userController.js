@@ -89,8 +89,8 @@ module.exports = {
         req.flash("notice", "Upgrade failed");
         res.redirect(`/users/${req.params.id}`);
       }else {
-        req.flash("success", "You have upgraded to a Premium Account!");
-        res.render(`/users/${req.params.id}`);
+        req.flash("notice", "You have upgraded to a Premium Account!");
+        res.redirect(`/users/${req.params.id}`);
       }
     });
   },
@@ -101,8 +101,8 @@ module.exports = {
         req.flash("notice", "You are still a Premium Member");
         res.redirect(`/users/${user.id}`);
       }else {
-        req.flash("success", "You are now a Standard Member");
-        res.redirect(`/users/${user.id}`)
+        req.flash("notice", "You are now a Standard Member");
+        res.redirect(`/users/${user.id}`);
       }
     });
   }

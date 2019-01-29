@@ -43,7 +43,7 @@
       zipCode: true,
       panelLabel: "Upgrade Membership",
       token: function(token) {
-        console.log(token);
+        //console.log(token);
         fetch("/charge", {
           method: "POST",
           headers: {"Content-Type": "application/json"},
@@ -52,6 +52,7 @@
           if(!response.ok){
             throw response;
           }
+          //console.log(response.json());
           return response.json();
         }).then((output) => {
           console.log("Purchase succeeded:", output);

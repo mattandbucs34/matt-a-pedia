@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 const Authorizer = require("../../policies/application");
 const testKey = process.env.STRIPE_TEST_KEY;
 const secretKey = process.env.STRIPE_SECRET_KEY;
-const stripe = require("stripe")("sk_test_fqLhMCXdoWadGFZcMXuURp3q");
+const stripe = require("stripe")(secretKey);
+//stripe.setApiKey(testKey);
 
 
 
