@@ -84,13 +84,11 @@ module.exports = {
   },
 
   upgrade(req, res, next) {
-    userQueries.upgradeUser(req, (err, user) => {
-      if(err || user === undefined) {
-        req.flash("notice", "Upgrade failed");
-        res.redirect(`/users/${req.params.id}`);
+    userQueries.chargeUser(req, (err, charge) => {
+      if(err || charge == null) {
+        res.redirect(401, `/users/${req.user.id}`);
       }else {
-        req.flash("success", "You have upgraded to a Premium Account!");
-        res.render(`/users/${req.params.id}`);
+        res.redirect(303, `/users/${req.user.id}`);
       }
     });
   },

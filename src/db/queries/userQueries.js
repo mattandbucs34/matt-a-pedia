@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 const Authorizer = require("../../policies/application");
 const testKey = process.env.STRIPE_TEST_KEY;
 const secretKey = process.env.STRIPE_SECRET_KEY;
-const stripe = require("stripe")("sk_test_fqLhMCXdoWadGFZcMXuURp3q");
+const stripe = require("stripe")(secretKey);
+console.log(secretKey);
 
 
 
@@ -43,13 +44,16 @@ module.exports = {
       amount: 1500,
       description: "Premium Membership",
       currency: 'usd',
-      source: req.body.id
+      source: req.body.stripeToken
     }).then((charge) => {
-      User.findByPk(req.user.id).then((user) => {
-        user.update({role: "premium"});
-      });
+      return User.findByPk(req.params.id).then((user) => {
+        user.role = "premium";
+        return user.save().then(() => charge);
+      })
+    }).then((charge) => {
       callback(null, charge);
     }).catch((err) => {
+      console.log("This is a dumb error:", err)
       callback(err);
     });
   },

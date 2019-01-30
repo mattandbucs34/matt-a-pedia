@@ -42,3 +42,46 @@ function(token) {
   });
 }
 
+<!-- script to process credit card for membership upgrade -->
+  
+  <script>
+    let handler = StripeCheckout.configure({
+      key: "pk_test_uq4sAcMvuGqDVUuEsJp9yT8C",
+      image: "https://stripe.com/img/documentation/checkout/marketplace.png",
+      locale: "auto",
+      zipCode: true,
+      panelLabel: "Upgrade Membership",
+      token: function(token) {
+        console.log(JSON.stringify(token));
+        fetch("/charge", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(token)
+        }).then((response) => {
+          if(!response.ok){
+            throw response;
+          }
+          console.log(response.json());
+          return response.json();
+        }).then((output) => {
+          console.log("Purchase succeeded:", output);
+        }).catch((err) => {
+          console.log("Purchase failed:", err);
+        });
+      }
+    });
+
+    document.querySelector("#upgradeButton").addEventListener("click", function(e) {
+      handler.open({
+        name: "Matt-a-Pedia",
+        description: "Upgrade Membership: $15.00",
+        amount: 1500,
+      });
+      e.preventDefault();
+    });
+
+    window.addEventListener("popstate", function() {
+      handler.close();
+    });
+  </script>
+
