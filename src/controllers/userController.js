@@ -88,7 +88,7 @@ module.exports = {
       if(err || charge == null) {
         res.redirect(401, `/users/${req.user.id}`);
       }else {
-        res.redirect(303, `/users/${req.user.id}`);
+        res.redirect(`/users/${req.user.id}`);
       }
     });
   },

@@ -21,13 +21,13 @@
         </div>
       </form>
     <% }else { %>
-      <form action="/users/<%= user.id %>/upgrade" method="POST">
+      <!-- <form action="/users/<%= user.id %>/upgrade" method="POST"> -->
         <div class="form-group">
           <p>
             <strong>Membership Type:</strong>&nbsp;<%= user.role %>
           </p>
-          <!-- <button type="submit" class="btn btn-success" id="upgradeButton">Upgrade</button> -->
-          <script
+          <button type="submit" class="btn btn-success" id="upgradeButton">Upgrade</button>
+          <!-- <script
             src="https://checkout.stripe.com/checkout.js" class="stripe-button"
             data-key="pk_test_uq4sAcMvuGqDVUuEsJp9yT8C"
             data-amount="1500"
@@ -37,16 +37,16 @@
             data-locale="auto"
             data-zip-code="true"
             data-label="Click to Upgrade">
-          </script>
+          </script> -->
         </div>
-      </form>
+      <!-- </form> -->
     <% } %>
   </main>
 
   <% include ../static/partials/baseScripts.ejs %>
   <!-- script to process credit card for membership upgrade -->
   
-  <!-- <script>
+  <script>
       let handler = StripeCheckout.configure({
         key: "pk_test_uq4sAcMvuGqDVUuEsJp9yT8C",
         image: "https://stripe.com/img/documentation/checkout/marketplace.png",
@@ -62,9 +62,10 @@
           }).then(response => {
             if(!response.ok)
               throw response;            
-            return response.clone().json();
+            //return response.clone().json();
           }).then(output => {
             console.log("Purchase succeeded:", output);
+            window.location.href="/users/<%= user.id %>";
           }).catch(err => {
             console.log("Purchase failed:", err);
           });
@@ -83,6 +84,6 @@
       window.addEventListener("popstate", function() {
         handler.close();
       });
-    </script>   -->
+    </script>  
 </body>
 </html>

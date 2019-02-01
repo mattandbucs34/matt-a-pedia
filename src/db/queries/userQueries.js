@@ -44,7 +44,7 @@ module.exports = {
       amount: 1500,
       description: "Premium Membership",
       currency: 'usd',
-      source: req.body.stripeToken
+      source: req.body.id
     }).then((charge) => {
       return User.findByPk(req.params.id).then((user) => {
         user.role = "premium";
