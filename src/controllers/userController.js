@@ -99,9 +99,10 @@ module.exports = {
         req.flash("notice", "You are still a Premium Member");
         res.redirect(`/users/${user.id}`);
       }else {
-        req.flash("success", "You are now a Standard Member");
+        req.flash("notice", "You are now a Standard Member");
         res.redirect(`/users/${user.id}`)
       }
     });
+    userQueries.downgradeWiki(req.params.id);
   }
 }

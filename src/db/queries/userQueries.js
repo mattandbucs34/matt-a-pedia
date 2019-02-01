@@ -1,4 +1,5 @@
 const User = require("../models").User;
+const Wiki = require("../models").Wikis;
 const bcrypt = require("bcryptjs");
 const Authorizer = require("../../policies/application");
 const testKey = process.env.STRIPE_TEST_KEY;
@@ -78,6 +79,20 @@ module.exports = {
           callback(err);
         });
       }
+    });
+  },
+
+  downgradeWiki(id) {
+    return Wiki.findAll().then((wikis) => {
+      wikis.forEach((wiki) => {
+        if(wiki.userId == id && wiki.private === true) {
+          wiki.update({
+            private: false
+          });
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
     });
   }
 }

@@ -12,7 +12,7 @@
     <h2>Membership</h2>
     <hr>
     <% if(currentUser.isPremium()) { %>
-      <form action="/users/<%= user.id %>/downgrade" method="POST">
+      <form action="/users/<%= user.id %>/downgrade" method="POST" onsubmit="return confirm('Your private wikis will be public if you downgrade.\nDo you wish to continue?');">
         <div class="form-group">
           <p>
             <strong>Membership Type:</strong>&nbsp;<%= user.role %>
