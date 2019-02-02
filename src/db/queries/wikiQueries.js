@@ -19,7 +19,7 @@ module.exports = {
   },
 
   getWiki(id, callback) {
-    return Wiki.findById(id).then((wiki) => {
+    return Wiki.findByPk(id).then((wiki) => {
       callback(null, wiki);
     }).catch((err) => {
       callback(err);
