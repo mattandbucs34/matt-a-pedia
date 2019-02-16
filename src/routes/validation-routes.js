@@ -36,7 +36,7 @@ module.exports ={
   validateWiki(req, res, next) {
     if(req.method === "POST") {
       req.checkBody("title", "must be at least 5 characters in length").isLength({min: 5});
-      req.checkBody("wikiBody", "must be at least 10 characters in length").isLength({min: 10});
+      req.checkBody("body", "must be at least 10 characters in length").isLength({min: 10});
     }
 
     const errors = req.validationErrors();

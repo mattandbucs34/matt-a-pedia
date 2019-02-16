@@ -1,0 +1,9 @@
+<hr>
+<h2>Wiki Collaborations:</h2>
+<ul class="list-group">
+  <% collaborations.forEach((collaboration) => { %>
+  <li class="list-group-item">
+    <a href="/wikis/<%= collaborations.Wiki.id %>"><%= collaboration.Wiki.title %></a>
+  </li>
+  <% }); %>
+</ul>

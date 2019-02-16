@@ -9,3 +9,13 @@ main {
 .matt-brand {
   font-size: 2.5em;
 }
+
+.collab-list-item {
+  margin-bottom: 2px;
+}
+
+.rmv-btn {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 10px;
+}

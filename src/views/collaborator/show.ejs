@@ -1,0 +1,18 @@
+<ul class="list-group">
+  <% if(!collaborators) { %>
+    <div class="alert alert-warning">This Wiki does not have any Collaborators currently!</div>
+  <% }else { %>
+    <% collaborators.forEach((collaborator) => { %>
+      <form action="/wikis/<%= wiki.id %>/collaborator/<%= collaborator.id %>/remove" method="POST" style="display:initial">
+        <div class="row collab-list-item">
+          <div class="col-md-4">
+            <li class="list-group-item">
+              <%= collaborator.User.username %>
+            </li>
+          </div>
+          <button type="submit" class="btn btn-outline-danger rmv-btn">Remove</button>
+        </div>
+      </form>
+    <% }) %>
+  <% } %>
+</ul>

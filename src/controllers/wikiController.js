@@ -1,17 +1,29 @@
 const wikiQueries = require("../db/queries/wikiQueries.js");
-const Authorizer = require("../policies/wikiPolicy");
+const Authorizer = require("../policies/application");
+const collabAuthorizer = require("../policies/collaborator");
 const markdown = require("markdown").markdown;
 
 module.exports = {
   index(req, res, next) {
-    wikiQueries.getAllWikis((err, wikis) => {
-      if(err) {
-        console.log(err.message);
-        res.redirect(500, "/index");
-      }else {
-        res.render("wikis/index", {wikis});
-      }
-    })
+    if(req.user === undefined) {
+      wikiQueries.getAllWikis((err, result) => {
+        if(err) {
+          res.redirect(500, "/index");
+        }else {
+          res.render("wikis/index", {...result});
+        }
+      });
+    }else {
+      wikiQueries.getCollaboration(req.user.id, (err, result) => {
+        if(err || result === undefined) {
+          req.flash("notice", "This user has no collaborations");
+          res.redirect("/wikis");
+        }else {
+          res.render("wikis/index", {...result});
+        }
+      });
+    }
+    
   },
 
   new(req, res, next) {
@@ -31,7 +43,7 @@ module.exports = {
     if(authorized) {
       let newWiki = {
         title: req.body.title,
-        body: req.body.wikiBody,
+        body: req.body.body,
         private: req.body.private,
         userId: req.user.id
       };
@@ -50,15 +62,23 @@ module.exports = {
   },
 
   show(req, res, next) {
-    wikiQueries.getWiki(req.params.id, (err, wiki)=> {
-      if(err || wiki == null) {
-        console.log(err);
-        res.redirect(404, "/");
-      }else {
-        wiki.body = markdown.toHTML(wiki.body);
-        res.render("wikis/show", {wiki});
-      }
-    });
+    const authorized = new Authorizer(req.user).show();
+
+    if(authorized) {
+      wikiQueries.getWiki(req, (err, result)=> {
+        if(err || result == null) {
+          req.flash("notice", "You must be signed in to view that");
+          res.redirect("/");
+        }else {
+          result.wiki.body = markdown.toHTML(result.wiki.body);
+          res.render("wikis/show", {...result});
+        }
+      });
+    }else {
+      req.flash("notice", "You must be a premium member to view that!");
+      res.redirect("/wikis");
+    }
+    
   },
 
   destroy(req, res, next) {
@@ -72,11 +92,18 @@ module.exports = {
   },
 
   edit(req, res, next) {
-    wikiQueries.getWiki(req.params.id, (err, wiki) => {
-      if(err || wiki == null) {
+    wikiQueries.getWiki(req, (err, result) => {
+      if(err || result == null) {
         res.redirect(404, "/");
       }else {
-        const authorized = new Authorizer(req.user, wiki).edit();
+        wiki = result['wiki'];
+        collaborator = result['collaborator'];
+        
+        if(collaborator == null) {
+          authorized = new Authorizer(req.user, wiki).edit();
+        }else if(collaborator != null) {
+          authorized = new collabAuthorizer(req.user, wiki, collaborator).edit();
+        }        
         
         if(authorized) {
           res.render("wikis/edit", {wiki});
@@ -91,9 +118,33 @@ module.exports = {
   update(req, res, next) {
     wikiQueries.updateWiki(req, req.body, (err, wiki) => {
       if(err || wiki == null) {
-        res.redirect(401, `/wikis/${req.params.id}/edit`);
+        req.flash("notice", "That wiki was not found");
+        res.redirect(`/wikis/${req.params.id}/edit`);
       }else {
         res.redirect(`/wikis/${req.params.id}`);
+      }
+    });
+  },
+  
+  showCollaborators(req, res, next) {
+    wikiQueries.getCollabs(req.params.id, (err, result) => {
+      if(err || result.wiki === undefined) {
+        req.flash("notice", "No wikis found with that information");
+        res.redirect("/wikis");
+      }else {
+        res.render("wikis/collaborators", {...result});
+      }
+    });
+  },
+
+  showCollaborated(req, res, next) {
+    wikiQueries.getCollaboration(req, (err, result) => {
+      if(err || result === undefined) {
+        req.flash("notice", "This user has no collaborations");
+        res.redirect("/wikis");
+      }else {
+        console.log(result);
+        res.render("/wikis/collabWikis", {...result});
       }
     });
   }

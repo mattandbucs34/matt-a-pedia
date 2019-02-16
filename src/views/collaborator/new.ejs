@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include ../static/partials/head.ejs %>
+</head>
+<body>
+  <% include ../static/partials/navbar.ejs %>
+
+  <main class="container">
+    <h1>Collaborators for <%= wiki.title %></h1>
+    <hr>
+    <% include ./show.ejs %>
+    <hr>
+    <h3>Add Collaborator to <%= wiki.title %></h3>
+    <form action="/wikis/<%= wiki.id %>/collaborator/create" method="POST">
+      <row>
+        <% if(users) { %>
+          <select class="custom-select col-md-4" name="selectUser" id="selectUser">
+            <% users.forEach((user) => { %>
+              <option value="<%= user.id %>"><%= user.username %></option>
+            <% }) %>
+          </select>
+        <% } %>
+        <button type="submit" class="btn btn-success">Add</button>
+      </row>
+    </form>
+  </main>
+  <% include ../static/partials/baseScripts.ejs %>
+</body>
+</html>

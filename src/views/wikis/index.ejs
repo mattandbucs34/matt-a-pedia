@@ -13,8 +13,16 @@
     <% if(currentUser) { %>
       <a href="/wikis/new" class="btn btn-success">New Wiki-Matt</a>
     <% } %>
+    <% if(currentUser && (currentUser.isPremium() || currentUser.isAdmin())) { %>
+      <% include ./private.ejs %>
+    <% } %>
+    <% if(currentUser) { %>
+      <%- include("./collabWikis", {currentUser}) %>
+    <% } %>
+    <hr>
+    <h2>Public Wikis:</h2>
     <ul class="list-group">
-      <% wikis.forEach((wiki) => { %>
+      <% publicWikis.forEach((wiki) => { %>
       <li class="list-group-item">
         <a href="/wikis/<%= wiki.id %>"><%= wiki.title %></a>
       </li>

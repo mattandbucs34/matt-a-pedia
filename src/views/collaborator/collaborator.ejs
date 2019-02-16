@@ -1,0 +1,11 @@
+<h1>Collaborators for <%= wiki.title %></h1>
+<hr>
+<ul class="list-group">
+  <% if(collaborator) { %>
+    <% collaborator.forEach((collab) => { %>
+      <li class="list-group-item">
+        <% collab.User.username %>
+      </li>
+    <% }) %>
+  <% } %>
+</ul>

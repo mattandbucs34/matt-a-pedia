@@ -8,15 +8,23 @@
 
   <main class="container">
     <h1><%= wiki.title %></h1>
-
-    <% if(currentUser.id === wiki.userId) { %>
-      <a href="/wikis/<%= wiki.id %>/edit" class="btn btn-warning">Edit</a>
-      <form action="/wikis/<%= wiki.id %>/destroy" style="display:initial" method="POST">
-        <button class="btn btn-danger" type="submit">Delete</button>
-      </form>
+    <% if(currentUser) {%>
+      <% if(currentUser.id === wiki.userId || (collaborator != null && currentUser.id === collaborator.User.id) || currentUser.isPremium() || currentUser.isAdmin()) { %>
+        <a href="/wikis/<%= wiki.id %>/edit" class="btn btn-warning">Edit</a>
+        <% if(currentUser.isPremium() || currentUser.isAdmin()) { %>
+        <form action="/wikis/<%= wiki.id %>/destroy" style="display:initial" method="POST">
+          <button class="btn btn-danger" type="submit">Delete</button>
+        </form>
+        <% } %>
+      <% } %>
     <% } %>
     <hr>
     <p><%- wiki.body %></p>
+    <hr>
+    <% if(currentUser && (currentUser.isPremium() || currentUser.isAdmin()) && wiki.private) { %>
+      <a href="/wikis/<%= wiki.id %>/collaborators" class="btn btn-outline-secondary">View Collaborators</a>
+      <a href="/wikis/<%= wiki.id %>/collaborator/new" class="btn btn-outline-primary">Add Collaborator</a>
+    <% } %>
   </main>
   <% include ../static/partials/baseScripts.ejs %>
 </body>

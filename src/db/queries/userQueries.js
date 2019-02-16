@@ -9,6 +9,17 @@ console.log(secretKey);
 
 
 module.exports = {
+  getAllUsers(callback) {
+    return User.findAll({
+      order: [["username", "ASC"]]
+    })
+    .then((users) => {
+      callback(null, users);
+    }).catch((err) => {
+      callback(err);
+    });
+  },
+
   createUser(newUser, callback) {
     const salt = bcrypt.genSaltSync();
     const hashedPassword = bcrypt.hashSync(newUser.password, salt);

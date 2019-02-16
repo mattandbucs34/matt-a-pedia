@@ -1,0 +1,9 @@
+<hr>
+<h2>Private Wikis:</h2>
+<ul class="list-group">
+  <% privateWikis.forEach((wiki) => { %>
+  <li class="list-group-item">
+    <a href="/wikis/<%= wiki.id %>"><%= wiki.title %></a>
+  </li>
+  <% }); %>
+</ul>

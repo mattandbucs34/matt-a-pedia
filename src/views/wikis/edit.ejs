@@ -17,11 +17,19 @@
         <input type="text" value="<%= wiki.title %>" class="form-control" name="title" aria-describedby="titleHelp" placeholder="Enter New Title">
       </div>
       <div class="form-group">
-        <label for="wikiBody">Wiki Information:</label>
-        <textarea name="wikiBody" cols="30" rows="10" class="form-control" placeholder="Enter Wiki Information">
+        <label for="body">Wiki Information:</label>
+        <textarea name="body" cols="30" rows="10" class="form-control" placeholder="Enter Wiki Information">
           <%= wiki.body %>
         </textarea>
       </div>
+      <% if(currentUser.isPremium()) { %>
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="checkPrivate" name="private">
+            <label class="custom-control-label" for="checkPrivate">Click to make Wiki Private</label>
+          </div>
+        </div>
+      <% } %>
       <button type="submit" class="btn btn-primary">Update</button>
     </form>
   </main>
