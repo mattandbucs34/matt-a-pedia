@@ -8,7 +8,8 @@ module.exports = {
     if(req.user === undefined) {
       wikiQueries.getAllWikis((err, result) => {
         if(err) {
-          res.redirect(500, "/index");
+          req.flash("notice", "Currently there are no Wikis");
+          res.redirect("/index");
         }else {
           res.render("wikis/index", {...result});
         }
