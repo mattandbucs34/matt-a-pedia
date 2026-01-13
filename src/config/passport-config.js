@@ -1,34 +1,32 @@
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const User = require("../db/models").default.User;
-const authHelper = require("../auth/helpers");
+import { initialize, session, use, serializeUser, deserializeUser } from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import User from "../db/models";
+import { comparePass } from "../auth/helpers";
 
-module.exports = {
-  init(app) {
-    app.use(passport.initialize());
-    app.use(passport.session());
+export function init(app) {
+  app.use(initialize());
+  app.use(session());
 
-    passport.use(new LocalStrategy((username, password, done) => {
-      User.findOne({
-        where: { username }
-      }).then((user) => {
-        if (!user || !authHelper.comparePass(password, user.password)) {
-          return done(null, false, { message: "Invalid username or password" });
-        }
-        return done(null, user);
-      });
-    }));
-
-    passport.serializeUser((user, callback) => {
-      callback(null, user.id);
+  use(new LocalStrategy((username, password, done) => {
+    User.findOne({
+      where: { username }
+    }).then((user) => {
+      if (!user || !comparePass(password, user.password)) {
+        return done(null, false, { message: "Invalid username or password" });
+      }
+      return done(null, user);
     });
+  }));
 
-    passport.deserializeUser((id, callback) => {
-      User.findByPk(id).then((user) => {
-        callback(null, user);
-      }).catch((err) => {
-        callback(err, user);
-      });
+  serializeUser((user, callback) => {
+    callback(null, user.id);
+  });
+
+  deserializeUser((id, callback) => {
+    User.findByPk(id).then((user) => {
+      callback(null, user);
+    }).catch((err) => {
+      callback(err, user);
     });
-  }
-};
+  });
+}
