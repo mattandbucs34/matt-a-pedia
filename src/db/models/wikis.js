@@ -1,5 +1,5 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   var Wikis = sequelize.define('Wikis', {
     title: {
       type: DataTypes.STRING,
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }
   }, {});
-  Wikis.associate = function(models) {
+  Wikis.associate = function (models) {
     // associations can be defined here
     Wikis.belongsTo(models.User, {
       foreignKey: "userId",
@@ -34,16 +34,16 @@ module.exports = (sequelize, DataTypes) => {
 
   Wikis.addScope("privateWikis", () => {
     return {
-      where: {private: true},
+      where: { private: true },
       order: [["createdAt", "ASC"]]
-    }
+    };
   });
 
   Wikis.addScope("publicWikis", () => {
     return {
-      where: {private: false},
+      where: { private: false },
       order: [["createdAt", "ASC"]]
-    }
+    };
   });
 
   return Wikis;

@@ -1,24 +1,22 @@
 'use strict';
-const faker = require("faker");
+
+import { internet } from "@faker-js/faker";
 
 let users = [];
 
-for(let i = 1; i <= 15; i++) {
+for (let i = 1; i <= 15; i++) {
   users.push({
-    username: faker.internet.userName(),
-    email: faker.internet.email(),
-    password: faker.internet.password(),
+    username: internet.userName(),
+    email: internet.email(),
+    password: internet.password(),
     createdAt: new Date(),
     updatedAt: new Date()
-  })
+  });
 }
 
-module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('Users', users, {});
-  },
-
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Users', null, {});
-  }
-};
+export function up(queryInterface) {
+  return queryInterface.bulkInsert('Users', users);
+}
+export function down(queryInterface) {
+  return queryInterface.bulkDelete('Users', null);
+}

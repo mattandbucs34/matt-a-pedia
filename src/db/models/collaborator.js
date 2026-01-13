@@ -1,5 +1,5 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   var Collaborator = sequelize.define('Collaborator', {
     userId: {
       type: DataTypes.INTEGER,
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }
   }, {});
-  Collaborator.associate = function(models) {
+  Collaborator.associate = function (models) {
     // associations are be defined here
     Collaborator.belongsTo(models.Wikis, {
       foreignKey: "wikiId",
@@ -28,8 +28,8 @@ module.exports = (sequelize, DataTypes) => {
           model: models.User,
           order: [["username", "ASC"]]
         }],
-        where: {wikiId: wikiId},
-      }
+        where: { wikiId: wikiId },
+      };
     });
 
     Collaborator.addScope('userCollaborationsFor', (userId) => {
@@ -38,9 +38,9 @@ module.exports = (sequelize, DataTypes) => {
           model: models.Wikis,
           order: [["createdAt", "ASC"]]
         }],
-        where: {userId: userId},
+        where: { userId: userId },
         //order: [['username', 'ASC']]
-      }
+      };
     });
   };
   return Collaborator;

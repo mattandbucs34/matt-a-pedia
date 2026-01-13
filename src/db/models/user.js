@@ -1,5 +1,5 @@
 'use strict';
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   var User = sequelize.define('User', {
     username: {
       type: DataTypes.STRING,
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
       validate: {
-        isEmail: { msg: "must be a valid email address"}
+        isEmail: { msg: "must be a valid email address" }
       }
     },
     password: {
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "standard"
     }
   }, {});
-  User.associate = function(models) {
+  User.associate = function (models) {
     // associations can be defined here
     User.hasMany(models.Wikis, {
       foreignKey: "userId",
@@ -37,12 +37,12 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
-  User.prototype.isAdmin = function() {
-    return this.role === "admin"
+  User.prototype.isAdmin = function () {
+    return this.role === "admin";
   };
 
-  User.prototype.isPremium = function() {
-    return this.role === "premium"
+  User.prototype.isPremium = function () {
+    return this.role === "premium";
   };
   return User;
 };
