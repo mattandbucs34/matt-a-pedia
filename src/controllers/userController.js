@@ -1,7 +1,8 @@
-import { createUser, getUser, chargeUser, downgradeUser } from "../db/queries/userQueries.js";
-import { authenticate } from "passport";
-import { setApiKey, send } from "@sendgrid/mail";
-setApiKey(process.env.SENDGRID_API_KEY);
+import { createUser as createUserQuery, getUser as getUserQuery, chargeUser as chargeUserQuery, downgradeUser as downgradeUserQuery } from "../db/queries/userQueries.js";
+import passport from "passport";
+const { authenticate } = passport;
+import sgMail from "@sendgrid/mail";
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 
 export function signUp(req, res, next) {
@@ -23,7 +24,7 @@ export function createNewUser(req, res, next) {
     html: '<strong>Thank you for registering for Matt-a-pedia. We are glad you joined us!</strong>'
   };
 
-  createUser(newUser, (err, user) => {
+  createUserQuery(newUser, (err, user) => {
     if (err) {
       req.flash("error", err);
       res.redirect("/users/sign-up");
@@ -32,7 +33,7 @@ export function createNewUser(req, res, next) {
         req.flash("notice", "You've successfully created an account!");
         res.redirect("/");
       });
-      send(msg);
+      sgMail.send(msg);
     }
   });
 }
@@ -56,7 +57,7 @@ export function signOutUser(req, res, next) {
   res.redirect("/");
 }
 export function showUserProfile(req, res, next) {
-  getUser(req.params.id, (err, result) => {
+  getUserQuery(req.params.id, (err, result) => {
     if (err || result.user === undefined) {
       req.flash("notice", "User with that ID not found.");
       res.redirect("/");
@@ -66,7 +67,7 @@ export function showUserProfile(req, res, next) {
   });
 }
 export function chargeUser(req, res, next) {
-  chargeUser(req, (err, charge) => {
+  chargeUserQuery(req, (err, charge) => {
     if (err || charge == null) {
       res.redirect(401, `/users/${req.user.id}`);
     } else {
@@ -75,7 +76,7 @@ export function chargeUser(req, res, next) {
   });
 }
 export function upgradeUser(req, res, next) {
-  chargeUser(req, (err, charge) => {
+  chargeUserQuery(req, (err, charge) => {
     if (err || charge == null) {
       res.redirect(401, `/users/${req.user.id}`);
     } else {
@@ -84,7 +85,7 @@ export function upgradeUser(req, res, next) {
   });
 }
 export function downgradeUser(req, res, next) {
-  downgradeUser(req.params.id, (err, user) => {
+  downgradeUserQuery(req.params.id, (err, user) => {
     if (err || user === undefined) {
       req.flash("notice", "You are still a Premium Member");
       res.redirect(`/users/${user.id}`);

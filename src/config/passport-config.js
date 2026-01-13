@@ -1,13 +1,14 @@
-import { initialize, session, use, serializeUser, deserializeUser } from "passport";
+import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import User from "../db/models";
-import { comparePass } from "../auth/helpers";
+import models from "../db/models/index.js";
+const User = models.User;
+import { comparePass } from "../auth/helpers.js";
 
 export function init(app) {
-  app.use(initialize());
-  app.use(session());
+  app.use(passport.initialize());
+  app.use(passport.session());
 
-  use(new LocalStrategy((username, password, done) => {
+  passport.use(new LocalStrategy((username, password, done) => {
     User.findOne({
       where: { username }
     }).then((user) => {
@@ -18,11 +19,11 @@ export function init(app) {
     });
   }));
 
-  serializeUser((user, callback) => {
+  passport.serializeUser((user, callback) => {
     callback(null, user.id);
   });
 
-  deserializeUser((id, callback) => {
+  passport.deserializeUser((id, callback) => {
     User.findByPk(id).then((user) => {
       callback(null, user);
     }).catch((err) => {

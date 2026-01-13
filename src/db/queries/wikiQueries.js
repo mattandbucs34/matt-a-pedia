@@ -1,7 +1,7 @@
-import { Wikis as Wiki } from "../models";
-import { Collaborator as Collab } from "../models";
-import Authorizer from "../../policies/wikiPolicy";
-import collabAuthorizer from "../../policies/collaborator";
+import models from "../models/index.js";
+const { Wikis: Wiki, Collaborator: Collab } = models;
+import Authorizer from "../../policies/wikiPolicy.js";
+import collabAuthorizer from "../../policies/collaborator.js";
 
 export function getAllWikis(callback) {
   let result = {};

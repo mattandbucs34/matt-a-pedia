@@ -1,12 +1,11 @@
-import { getUsers, addCollaborator, getCollaborators, removeCollaborator } from "../db/queries/collabQueries.js";
-import userQueries from "../db/queries/userQueries.js";
+import { getUsers as getUsersQuery, addCollaborator as addCollaboratorQuery, getCollaborators as getCollaboratorsQuery, removeCollaborator as removeCollaboratorQuery } from "../db/queries/collabQueries.js";
 import Authorizer from "../policies/collaborator.js";
 
 
 export function newCollaborator(req, res, next) {
   const authorized = new Authorizer(req.user).new();
   if (authorized) {
-    getUsers(req, (err, result) => {
+    getUsersQuery(req, (err, result) => {
       if (err || result.wiki === undefined) {
         console.log(err);
         req.flash("error", "There are no users!");
@@ -29,7 +28,7 @@ export function createCollaborator(req, res, next) {
   const authorized = new Authorizer(req.user).create();
 
   if (authorized) {
-    addCollaborator(newCollaborator, (err, collaborator) => {
+    addCollaboratorQuery(newCollaborator, (err, collaborator) => {
       if (err) {
         req.flash("error", err);
         res.redirect(`/wikis/${req.params.wikiId}`);
@@ -44,7 +43,7 @@ export function createCollaborator(req, res, next) {
   }
 }
 export function showCollaborator(req, res, next) {
-  getCollaborators(req, (err, result) => {
+  getCollaboratorsQuery(req, (err, result) => {
     res.render("/collaborator/show", { ...result });
   });
 }
@@ -52,7 +51,7 @@ export function removeCollaborator(req, res, next) {
   const authorized = new Authorizer(req.user).destroy();
 
   if (authorized) {
-    removeCollaborator(req, (err, collaborator) => {
+    removeCollaboratorQuery(req, (err, collaborator) => {
       if (err) {
         req.flash("error", "No collaborators were removed");
         res.redirect(`/wikis/${req.params.wikiId}/collaborator/new`);

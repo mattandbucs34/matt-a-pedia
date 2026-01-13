@@ -1,8 +1,10 @@
-import { User } from "../models";
-import { genSaltSync, hashSync } from "bcryptjs";
-const testKey = process.env.STRIPE_TEST_KEY;
+import models from "../models/index.js";
+const User = models.User;
+import bcrypt from "bcryptjs";
+const { genSaltSync, hashSync } = bcrypt;
+import Stripe from "stripe";
 const secretKey = process.env.STRIPE_SECRET_KEY;
-const stripe = require("stripe")(secretKey);
+const stripe = new Stripe(secretKey);
 
 
 

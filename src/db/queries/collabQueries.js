@@ -1,7 +1,6 @@
-import { Collaborator as Collab } from "../models";
-import { Wikis as Wiki } from "../models";
-import { User } from "../models";
-import { Sequelize } from "sequelize";
+import models from "../models/index.js";
+const { Collaborator: Collab, Wikis: Wiki, User } = models;
+import Sequelize from "sequelize";
 const Op = Sequelize.Op;
 
 export function getUsers(req, callback) {

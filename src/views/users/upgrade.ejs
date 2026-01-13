@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <% include ../static/partials/head.ejs %>
+  <%- include("../static/partials/head.ejs") %>
 </head>
 <body>
   <main>
-    <% include ../static/partials/navbar.ejs %>
+    <%- include("../static/partials/navbar.ejs") %>
 
     <form action="/users/charge" method="POST">
       <script
@@ -21,7 +21,7 @@
     </form>
 
   </main>
-  <% include ../static/partials/baseScripts.ejs %>
+  <%- include("../static/partials/baseScripts.ejs") %>
 </body>
 </html>
 

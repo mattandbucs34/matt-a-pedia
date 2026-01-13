@@ -1,6 +1,6 @@
 import { Router } from "express";
 const router = Router();
-import { newCollaborator, createCollaborator, removeCollaborator } from "../controllers/collabController";
+import { newCollaborator, createCollaborator, removeCollaborator } from "../controllers/collabController.js";
 
 router.get("/wikis/:wikiId/collaborator/new", newCollaborator);
 

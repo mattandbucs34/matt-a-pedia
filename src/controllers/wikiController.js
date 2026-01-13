@@ -1,11 +1,11 @@
-import { getAllWikis, getCollaboration, addWiki, getWiki, deleteWiki, updateWiki, getCollabs } from "../db/queries/wikiQueries.js";
-import Authorizer from "../policies/application";
-import collabAuthorizer from "../policies/collaborator";
+import { getAllWikis as getAllWikisQuery, getCollaboration as getCollaborationQuery, addWiki as addWikiQuery, getWiki as getWikiQuery, deleteWiki as deleteWikiQuery, updateWiki as updateWikiQuery, getCollabs as getCollabsQuery } from "../db/queries/wikiQueries.js";
+import Authorizer from "../policies/application.js";
+import collabAuthorizer from "../policies/collaborator.js";
 import { markdown } from "markdown";
 
 export function index(req, res, next) {
   if (req.user === undefined) {
-    getAllWikis((err, result) => {
+    getAllWikisQuery((err, result) => {
       if (err) {
         req.flash("notice", "Currently there are no Wikis");
         res.redirect("/index");
@@ -14,7 +14,7 @@ export function index(req, res, next) {
       }
     });
   } else {
-    getCollaboration(req.user.id, (err, result) => {
+    getCollaborationQuery(req.user.id, (err, result) => {
       if (err || result === undefined) {
         req.flash("notice", "This user has no collaborations");
         res.redirect("/wikis");
@@ -48,7 +48,7 @@ export function createWiki(req, res, next) {
       userId: req.user.id
     };
 
-    addWiki(newWiki, (err, wiki) => {
+    addWikiQuery(newWiki, (err, wiki) => {
       if (err) {
         res.redirect(500, "/wikis/new");
       } else {
@@ -65,7 +65,7 @@ export function showWiki(req, res, next) {
   const authorized = new Authorizer(req.user).show();
 
   if (authorized) {
-    getWiki(req, (err, result) => {
+    getWikiQuery(req, (err, result) => {
       if (err || result == null) {
         req.flash("notice", "You must be signed in to view that");
         res.redirect("/");
@@ -81,7 +81,7 @@ export function showWiki(req, res, next) {
 
 }
 export function destroyWiki(req, res, next) {
-  deleteWiki(req, (err, wiki) => {
+  deleteWikiQuery(req, (err, wiki) => {
     if (err) {
       res.redirect(err, `/wikis/${req.params.id}`);
     } else {
@@ -91,7 +91,7 @@ export function destroyWiki(req, res, next) {
 }
 
 export function editWiki(req, res, next) {
-  getWiki(req, (err, result) => {
+  getWikiQuery(req, (err, result) => {
     if (err || result == null) {
       res.redirect(404, "/");
     } else {
@@ -115,7 +115,7 @@ export function editWiki(req, res, next) {
 }
 
 export function updateWiki(req, res, next) {
-  updateWiki(req, req.body, (err, wiki) => {
+  updateWikiQuery(req, req.body, (err, wiki) => {
     if (err || wiki == null) {
       req.flash("notice", "That wiki was not found");
       res.redirect(`/wikis/${req.params.id}/edit`);
@@ -126,7 +126,7 @@ export function updateWiki(req, res, next) {
 }
 
 export function showCollaborators(req, res, next) {
-  getCollabs(req.params.id, (err, result) => {
+  getCollabsQuery(req.params.id, (err, result) => {
     if (err || result.wiki === undefined) {
       req.flash("notice", "No wikis found with that information");
       res.redirect("/wikis");
@@ -137,7 +137,7 @@ export function showCollaborators(req, res, next) {
 }
 
 export function showCollaborated(req, res, next) {
-  getCollaboration(req, (err, result) => {
+  getCollaborationQuery(req, (err, result) => {
     if (err || result === undefined) {
       req.flash("notice", "This user has no collaborations");
       res.redirect("/wikis");

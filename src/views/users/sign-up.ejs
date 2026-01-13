@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <% include ../static/partials/head.ejs %>
+  <%- include("../static/partials/head.ejs") %>
 </head>
 <body>
-  <% include ../static/partials/navbar.ejs %>
+  <%- include("../static/partials/navbar.ejs") %>
   
   <main class="container">
-    <% include ../static/partials/messages.ejs %>
+    <%- include("../static/partials/messages.ejs") %>
     
     <h2>Welcome to Matt-A-Pedia!</h2>
     <h3>Please sign up</h3>
@@ -38,6 +38,6 @@
       </div>
     </div>
   </main>
-  <% include ../static/partials/baseScripts.ejs %>
+  <%- include("../static/partials/baseScripts.ejs") %>
 </body>
 </html>

@@ -1,4 +1,4 @@
-import app from "./app";
+import app from "./app.js";
 import { createServer } from "http";
 const server = createServer(app);
 const port = normalizePort(process.env.PORT || "3000");

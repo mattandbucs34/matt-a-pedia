@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 import { validateUsers, validateSignIn } from "./validation-routes.js";
-import { signUp, signInForm, signOutUser, showUserProfile, createNewUser, signInUser, upgradeUser, downgradeUser } from "../controllers/userController";
+import { signUp, signInForm, signOutUser, showUserProfile, createNewUser, signInUser, upgradeUser, downgradeUser } from "../controllers/userController.js";
 
 router.get("/users/sign-up", signUp);
 router.get("/users/sign-in", signInForm);

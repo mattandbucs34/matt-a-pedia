@@ -1,8 +1,8 @@
 import { Router } from "express";
 const router = Router();
-import { index, newWiki, showWiki, editWiki, showCollaborators, createWiki, destroyWiki, updateWiki } from "../controllers/wikiController";
-import { validateWiki } from "./validation-routes";
-import { ensureAuthenticated } from "../auth/helpers";
+import { index, newWiki, showWiki, editWiki, showCollaborators, createWiki, destroyWiki, updateWiki } from "../controllers/wikiController.js";
+import { validateWiki } from "./validation-routes.js";
+import { ensureAuthenticated } from "../auth/helpers.js";
 
 router.get("/wikis", index);
 router.get("/wikis/new", newWiki);

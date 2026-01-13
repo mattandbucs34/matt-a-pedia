@@ -1,47 +1,47 @@
-export function validateUsers(req, res, next) {
-  if (req.method === "POST") {
-    req.checkBody("username", "must be at least 6 characters in length").isLength({ min: 6 });
-    req.checkBody("email", "must be valid").isEmail();
-    req.checkBody("password", "must be at least 6 characters in length").isLength({ min: 6 });
-    req.checkBody("confirmPW", "must match password provided").optional().matches(req.body.password);
-  }
+import { check, validationResult } from "express-validator";
 
-  const errors = req.validationErrors();
-
-  if (errors) {
-    req.flash("error", errors);
-    return res.redirect(req.headers.referer);
-  } else {
-    return next();
+export const validateUsers = [
+  check("username", "must be at least 6 characters in length").isLength({ min: 6 }),
+  check("email", "must be valid").isEmail(),
+  check("password", "must be at least 6 characters in length").isLength({ min: 6 }),
+  check("confirmPW", "must match password provided").optional().custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error("passwords must match");
+    }
+    return true;
+  }),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      req.flash("error", errors.array());
+      return res.redirect(req.headers.referer);
+    }
+    next();
   }
-}
-export function validateSignIn(req, res, next) {
-  if (req.method === "POST") {
-    req.checkBody("username", "must be at least 6 characters in length").isLength({ min: 6 });
-    req.checkBody("password", "must be at least 6 characters in length").isLength({ min: 6 });
-  }
+];
 
-  const errors = req.validationErrors();
-
-  if (errors) {
-    req.flash("error", errors);
-    return res.redirect(req.headers.referer);
-  } else {
-    return next();
+export const validateSignIn = [
+  check("username", "must be at least 6 characters in length").isLength({ min: 6 }),
+  check("password", "must be at least 6 characters in length").isLength({ min: 6 }),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      req.flash("error", errors.array());
+      return res.redirect(req.headers.referer);
+    }
+    next();
   }
-}
-export function validateWiki(req, res, next) {
-  if (req.method === "POST") {
-    req.checkBody("title", "must be at least 5 characters in length").isLength({ min: 5 });
-    req.checkBody("body", "must be at least 10 characters in length").isLength({ min: 10 });
-  }
+];
 
-  const errors = req.validationErrors();
-
-  if (errors) {
-    req.flash("error", errors);
-    return res.redirect(req.headers.referer);
-  } else {
-    return next();
+export const validateWiki = [
+  check("title", "must be at least 5 characters in length").isLength({ min: 5 }),
+  check("body", "must be at least 10 characters in length").isLength({ min: 10 }),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      req.flash("error", errors.array());
+      return res.redirect(req.headers.referer);
+    }
+    next();
   }
-}
+];

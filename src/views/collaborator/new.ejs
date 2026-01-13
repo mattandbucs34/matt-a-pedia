@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <% include ../static/partials/head.ejs %>
+  <%- include("../static/partials/head.ejs") %>
 </head>
 <body>
-  <% include ../static/partials/navbar.ejs %>
+  <%- include("../static/partials/navbar.ejs") %>
 
   <main class="container">
     <h1>Collaborators for <%= wiki.title %></h1>
     <hr>
-    <% include ./show.ejs %>
+    <%- include("./show.ejs") %>
     <hr>
     <h3>Add Collaborator to <%= wiki.title %></h3>
     <form action="/wikis/<%= wiki.id %>/collaborator/create" method="POST">
@@ -25,6 +25,6 @@
       </row>
     </form>
   </main>
-  <% include ../static/partials/baseScripts.ejs %>
+  <%- include("../static/partials/baseScripts.ejs") %>
 </body>
 </html>

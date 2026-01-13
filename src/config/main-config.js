@@ -1,19 +1,23 @@
-require("dotenv").config();
-import { join } from "path";
-const viewsFolder = join(__dirname, "..", "views");
-import expressValidator from "express-validator";
+import "dotenv/config";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 import session from "express-session";
-import { urlencoded, json } from "body-parser";
+import bodyParser from "body-parser";
+const { urlencoded, json } = bodyParser;
 import flash from "express-flash";
-import { init as _init } from "./passport-config";
+import { init as _init } from "./passport-config.js";
 import logger from "morgan";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const viewsFolder = join(__dirname, "..", "views");
 
 export function init(app, express) {
   app.set("views", viewsFolder);
   app.set("view engine", "ejs");
   app.use(urlencoded({ extended: true }));
   app.use(express.static(join(__dirname, "..", "assets")));
-  app.use(expressValidator());
   app.use(logger("dev"));
   app.use(session({
     secret: process.env.cookieSecret,
