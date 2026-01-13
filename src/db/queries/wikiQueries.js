@@ -3,144 +3,140 @@ const { Wikis: Wiki, Collaborator: Collab } = models;
 import Authorizer from "../../policies/wikiPolicy.js";
 import collabAuthorizer from "../../policies/collaborator.js";
 
-export function getAllWikis(callback) {
-  let result = {};
-  Wiki.findAll({
-    where: { private: true }
-  })
-    .then((privateWikis) => {
-      result["privateWikis"] = privateWikis;
-
-      Wiki.findAll({
-        where: { private: false }
-      })
-        .then((publicWikis) => {
-          result["publicWikis"] = publicWikis;
-          callback(null, result);
-        });
-    }).catch((err) => {
-      callback(err);;
-    });
-}
-
-export function addWiki(newWiki, callback) {
-  return Wiki.create(newWiki).then((wiki) => {
-    callback(null, wiki);
-  }).catch((err) => {
-    callback(err);
-  });
-}
-
-export function getWiki(req, callback) {
-  let result = {};
-  return Wiki.findByPk(req.params.id)
-    .then((wiki) => {
-      result["wiki"] = wiki;
-
-      Collab.scope({ method: ["collaboratorFor", req.params.id] }).findOne({
-        where: { userId: req.user.id }
-      }).then((collaborator) => {
-        result["collaborator"] = collaborator;
-        callback(null, result);
-      });
-    }).catch((err) => {
-      callback(err);
-    });
-}
-
-export function deleteWiki(req, callback) {
-  return Wiki.findById(req.params.id).then((wiki) => {
-    const authorized = new Authorizer(req.user, wiki).destroy();
-    if (authorized) {
-      wiki.destroy().then((res) => {
-        callback(null, wiki);
-      });
-    } else {
-      req.flash("notice", "You must be signed in to do that!");
-      callback(401);
-    }
-  }).catch((err) => {
-    callback(err);
-  });
-}
-
-export function updateWiki(req, updatedWiki, callback) {
-  return Wiki.findByPk(req.params.id).then((wiki) => {
-    if (!wiki) {
-      return callback("Wiki not found");
-    }
-
+export async function getAllWikis() {
     let result = {};
-    Collab.scope({ method: ["collaboratorFor", req.params.id] }).findOne({
-      where: { userId: req.user.id }
-    }).then((collaborator) => {
-      result['collab'] = collaborator;
-
-      collab = result['collab'];
-      if (collab != null) {
-        authorized = new collabAuthorizer(req.user, wiki, collab).update();
-      } else {
-        authorized = new Authorizer(req.user, wiki).update();
-      };
-
-      if (authorized) {
-
-        wiki.update(updatedWiki, {
-          fields: Object.keys(updatedWiki)
-        }).then(() => {
-          callback(null, wiki);
-        }).catch((err) => {
-          callback(err);
-        });
-      } else {
-        req.flash("notice", "You must be signed in to do that!");
-        callback("Forbidden");
-      }
-    });
-  });
-}
-
-export function getCollabs(id, callback) {
-  let result = {};
-  Wiki.findByPk(id)
-    .then((wiki) => {
-      if (!wiki) {
-        callback(404);
-      } else {
-        result["wikis"] = wiki;
-
-        Collab.scope({ method: ["collaboratorFor", id] }).all()
-          .then((collabs) => {
-            result["collaborators"] = collabs;
-            callback(null, result);
-          }).catch((err) => {
-            callback(err);
-          });
-      }
-    });
-}
-
-export function getCollaboration(id, callback) {
-  let result = {};
-  Collab.scope({ method: ["userCollaborationsFor", id] }).findAll()
-    .then((collabs) => {
-      result["collaborations"] = collabs;
-
-      Wiki.findAll({
-        where: { private: false }
-      })
-        .then((publicWikis) => {
-          result["publicWikis"] = publicWikis;
-
-          Wiki.findAll({
+    try {
+        const privateWikis = await Wiki.findAll({
             where: { private: true }
-          })
-            .then((privateWikis) => {
-              result["privateWikis"] = privateWikis;
-              callback(null, result);
-            });
         });
-    }).catch((err) => {
-      callback(err);
-    });
+
+        result["privateWikis"] = privateWikis;
+
+        const publicWikis = await Wiki.findAll({
+            where: { private: false }
+        });
+
+        result["publicWikis"] = publicWikis;
+
+        return result;
+    } catch (err) {
+        return { error: err };
+    }
+}
+
+export async function addWiki(newWiki) {
+    try {
+        const wiki = await Wiki.create(newWiki);
+        return wiki;
+    } catch (error) {
+        return { error: error };
+    }
+}
+
+export async function getWiki(req) {
+    let result = {};
+    try {
+        const wiki = await Wiki.findByPk(req.params.id);
+        result["wiki"] = wiki;
+
+        const collaborator = await Collab.scope({ method: ["collaboratorFor", req.params.id] }).findOne({
+            where: { userId: req.user.id }
+        });
+        result["collaborator"] = collaborator;
+
+        return result;
+    } catch (error) {
+        return { error: error };
+    }
+}
+
+export async function deleteWiki(req) {
+    try {
+        const wiki = await Wiki.findByPk(req.params.id);
+        const authorized = new Authorizer(req.user, wiki).destroy();
+        if (authorized) {
+            wiki.destroy();
+            return wiki;
+        } else {
+            req.flash("notice", "You must be signed in to do that!");
+            return { error: "Forbidden" };
+        }
+    } catch (error) {
+        return { error: error };
+    }
+}
+
+export async function updateWiki(req, updatedWiki) {
+    try {
+        const wiki = await Wiki.findByPk(req.params.id);
+        if (!wiki) {
+            return { error: "Wiki not found" };
+        }
+
+        let result = {};
+        const collaborator = await Collab.scope({ method: ["collaboratorFor", req.params.id] }).findOne({
+            where: { userId: req.user.id }
+        });
+        result['collab'] = collaborator;
+
+        let isAuthorized = false;
+        if (collaborator != null) {
+            isAuthorized = new collabAuthorizer(req.user, wiki, collaborator).update();
+        } else {
+            isAuthorized = new Authorizer(req.user, wiki).update();
+        };
+
+        if (isAuthorized) {
+
+            const newWiki = await wiki.update(updatedWiki, {
+                fields: Object.keys(updatedWiki)
+            });
+            return newWiki;
+        } else {
+            req.flash("notice", "You must be signed in to do that!");
+            return { error: "Forbidden" };
+        }
+    } catch (error) {
+        return { error: error };
+    }
+}
+
+export async function getCollabs(id) {
+    let result = {};
+    try {
+        const wiki = await Wiki.findByPk(id);
+        if (!wiki) {
+            return { error: "Wiki not found" };
+        } else {
+            result["wikis"] = wiki;
+
+            const collabs = await Collab.scope({ method: ["collaboratorFor", id] }).all();
+            result["collaborators"] = collabs;
+            return result;
+        }
+    } catch (error) {
+        return { error: error };
+    }
+}
+
+export async function getCollaboration(id) {
+    let result = {};
+    try {
+        const collaborators = await Collab.scope({ method: ["userCollaborationsFor", id] }).findAll();
+        result["collaborations"] = collaborators;
+
+        const publicWikis = await Wiki.findAll({
+            where: { private: false }
+        });
+        result["publicWikis"] = publicWikis;
+
+        const privateWikis = await Wiki.findAll({
+            where: { private: true }
+        });
+        result["privateWikis"] = privateWikis;
+
+        return result;
+    } catch (err) {
+        return { error: err };
+    }
 }
