@@ -34,7 +34,7 @@ export function newWiki(req, res) {
     }
 }
 
-export function createWiki(req, res) {
+export async function createWiki(req, res) {
     const authorized = new Authorizer(req.user).create();
 
     if (authorized) {
@@ -45,7 +45,7 @@ export function createWiki(req, res) {
             userId: req.user.id
         };
 
-        addWikiQuery(newWiki, (err, wiki) => {
+        await addWikiQuery(newWiki, (err, wiki) => {
             if (err) {
                 res.redirect(500, "/wikis/new");
             } else {
@@ -58,11 +58,11 @@ export function createWiki(req, res) {
     }
 }
 
-export function showWiki(req, res) {
+export async function showWiki(req, res) {
     const authorized = new Authorizer(req.user).show();
 
     if (authorized) {
-        getWikiQuery(req, (err, result) => {
+        await getWikiQuery(req, (err, result) => {
             if (err || result == null) {
                 req.flash("notice", "You must be signed in to view that");
                 res.redirect("/");
@@ -77,8 +77,9 @@ export function showWiki(req, res) {
     }
 
 }
-export function destroyWiki(req, res) {
-    deleteWikiQuery(req, (err,) => {
+
+export async function destroyWiki(req, res) {
+    await deleteWikiQuery(req, (err,) => {
         if (err) {
             res.redirect(err, `/wikis/${req.params.id}`);
         } else {
@@ -87,8 +88,8 @@ export function destroyWiki(req, res) {
     });
 }
 
-export function editWiki(req, res) {
-    getWikiQuery(req, (err, result) => {
+export async function editWiki(req, res) {
+    await getWikiQuery(req, (err, result) => {
         if (err || result == null) {
             res.redirect(404, "/");
         } else {
@@ -112,8 +113,8 @@ export function editWiki(req, res) {
     });
 }
 
-export function updateWiki(req, res) {
-    updateWikiQuery(req, req.body, (err, wiki) => {
+export async function updateWiki(req, res) {
+    await updateWikiQuery(req, req.body, (err, wiki) => {
         if (err || wiki == null) {
             req.flash("notice", "That wiki was not found");
             res.redirect(`/wikis/${req.params.id}/edit`);
@@ -123,8 +124,8 @@ export function updateWiki(req, res) {
     });
 }
 
-export function showCollaborators(req, res) {
-    getCollabsQuery(req.params.id, (err, result) => {
+export async function showCollaborators(req, res) {
+    await getCollabsQuery(req.params.id, (err, result) => {
         if (err || result.wiki === undefined) {
             req.flash("notice", "No wikis found with that information");
             res.redirect("/wikis");
@@ -134,8 +135,8 @@ export function showCollaborators(req, res) {
     });
 }
 
-export function showCollaborated(req, res) {
-    getCollaborationQuery(req, (err, result) => {
+export async function showCollaborated(req, res) {
+    await getCollaborationQuery(req, (err, result) => {
         if (err || result === undefined) {
             req.flash("notice", "This user has no collaborations");
             res.redirect("/wikis");
