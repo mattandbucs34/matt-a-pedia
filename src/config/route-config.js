@@ -1,11 +1,11 @@
 module.exports = {
   init(app) {
-    const staticRoutes = require("../routes/index-route");
-    const userRoutes = require("../routes/users-routes");
-    const wikiRoutes = require("../routes/wiki-routes");
-    const collabRoutes = require("../routes/collaborator-routes");
-    
-    if(process.env.NODE_ENV === "test") {
+    const staticRoutes = require("../routes/index-route").default;
+    const userRoutes = require("../routes/users-routes").default;
+    const wikiRoutes = require("../routes/wiki-routes").default;
+    const collabRoutes = require("../routes/collaborator-routes").default;
+
+    if (process.env.NODE_ENV === "test") {
       const mockAuth = require("../../spec/support/mock-auth.js");
       mockAuth.fakeIt(app);
     }
@@ -15,4 +15,4 @@ module.exports = {
     app.use(wikiRoutes);
     app.use(collabRoutes);
   }
-}
+};

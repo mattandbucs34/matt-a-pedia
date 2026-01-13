@@ -1,9 +1,9 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const appConfig = require("./config/main-config.js");
-const routeConfig = require("./config/route-config.js");
+import { init } from "./config/main-config.js";
+import { init as _init } from "./config/route-config.js";
 
-appConfig.init(app, express);
-routeConfig.init(app);
+init(app, express);
+_init(app);
 
-module.exports = app;
+export default app;

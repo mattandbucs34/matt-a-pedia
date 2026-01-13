@@ -2,3 +2,5 @@
 +.env
 stripe.env
 sendgrid.env
+
+.agent/*

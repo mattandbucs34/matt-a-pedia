@@ -1,18 +1,18 @@
-const express = require("express");
-const router = express.Router();
-const wikiController = require("../controllers/wikiController");
-const validation = require("./validation-routes");
-const helper = require("../auth/helpers");
+import { Router } from "express";
+const router = Router();
+import { index, newWiki, showWiki, editWiki, showCollaborators, createWiki, destroyWiki, updateWiki } from "../controllers/wikiController";
+import { validateWiki } from "./validation-routes";
+import { ensureAuthenticated } from "../auth/helpers";
 
-router.get("/wikis", wikiController.index);
-router.get("/wikis/new", wikiController.new);
-router.get("/wikis/:id", wikiController.show);
-router.get("/wikis/:id/edit", wikiController.edit);
-router.get("/wikis/:id/collaborators", wikiController.showCollaborators);
+router.get("/wikis", index);
+router.get("/wikis/new", newWiki);
+router.get("/wikis/:id", showWiki);
+router.get("/wikis/:id/edit", editWiki);
+router.get("/wikis/:id/collaborators", showCollaborators);
 /*router.get("/wikis/collabWikis", wikiController.showCollaborated); */
 
-router.post("/wikis/create", helper.ensureAuthenticated, validation.validateWiki, wikiController.create);
-router.post("/wikis/:id/destroy", wikiController.destroy);
-router.post("/wikis/:id/update", validation.validateWiki, wikiController.update);
+router.post("/wikis/create", ensureAuthenticated, validateWiki, createWiki);
+router.post("/wikis/:id/destroy", destroyWiki);
+router.post("/wikis/:id/update", validateWiki, updateWiki);
 
-module.exports = router;
+export default router;
