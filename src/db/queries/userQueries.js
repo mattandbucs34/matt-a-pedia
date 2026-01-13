@@ -1,6 +1,6 @@
 const User = require("../models").User;
 const bcrypt = require("bcryptjs");
-const Authorizer = require("../../policies/application");
+const Authorizer = require("../../policies/application").default;
 const testKey = process.env.STRIPE_TEST_KEY;
 const secretKey = process.env.STRIPE_SECRET_KEY;
 const stripe = require("stripe")(secretKey);
@@ -12,11 +12,11 @@ module.exports = {
     return User.findAll({
       order: [["username", "ASC"]]
     })
-    .then((users) => {
-      callback(null, users);
-    }).catch((err) => {
-      callback(err);
-    });
+      .then((users) => {
+        callback(null, users);
+      }).catch((err) => {
+        callback(err);
+      });
   },
 
   createUser(newUser, callback) {
@@ -32,17 +32,17 @@ module.exports = {
     }).catch((err) => {
       console.log(err);
       callback(err);
-    })
+    });
   },
 
   getUser(id, callback) {
     let result = {};
     User.findByPk(id).then((user) => {
-      if(!user) {
+      if (!user) {
         callback(404);
-      }else {
+      } else {
         result["user"] = user;
-        callback(null, result)
+        callback(null, result);
       }
     }).catch((err) => {
       callback(err);
@@ -59,18 +59,18 @@ module.exports = {
       return User.findByPk(req.params.id).then((user) => {
         user.role = "premium";
         return user.save().then(() => charge);
-      })
+      });
     }).then((charge) => {
       callback(null, charge);
     }).catch((err) => {
-      console.log("This is a dumb error:", err)
+      console.log("This is a dumb error:", err);
       callback(err);
     });
   },
 
   upgradeUser(req, callback) {
-    User.findOne({where: {email: req.body.email}}).then((user) => {
-      user.update({role: "premium"});
+    User.findOne({ where: { email: req.body.email } }).then((user) => {
+      user.update({ role: "premium" });
       callback(null, user);
     }).catch((err) => {
       callback(err);
@@ -79,10 +79,10 @@ module.exports = {
 
   downgradeUser(id, callback) {
     return User.findByPk(id).then((user) => {
-      if(!user) {
+      if (!user) {
         return callback("User not found");
-      }else {
-        return user.update({role: "standard"}).then(() => {
+      } else {
+        return user.update({ role: "standard" }).then(() => {
           callback(null, user);
         }).catch((err) => {
           callback(err);
@@ -90,4 +90,4 @@ module.exports = {
       }
     });
   }
-}
+};

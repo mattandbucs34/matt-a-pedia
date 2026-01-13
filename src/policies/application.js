@@ -1,47 +1,47 @@
-module.exports = class ApplicationPolicy {
-  constructor(user, record, collaborator) {
-    this.user = user;
-    this.record = record;
-    this.collaborator = collaborator;
-  }
+export default class ApplicationPolicy {
+    constructor(user, record, collaborator) {
+        this.user = user;
+        this.record = record;
+        this.collaborator = collaborator;
+    }
 
-  _isOwner() {
-    return this.record && (this.record.userId == this.user.id);
-  }
+    _isOwner() {
+        return this.record && (this.record.userId == this.user.id);
+    }
 
-  _isAdmin() {
-    return this.user && this.user.role == "admin";
-  }
+    _isAdmin() {
+        return this.user && this.user.role == "admin";
+    }
 
-  _isPremium() {
-    return this.user && this.user.role == "premium";
-  }
+    _isPremium() {
+        return this.user && this.user.role == "premium";
+    }
 
-  /* _isCollaborator() {
-    return this.user && this.collaborator && (this.user.id == this.collaborator.User.id);
-  } */
+    /* _isCollaborator() {
+      return this.user && this.collaborator && (this.user.id == this.collaborator.User.id);
+    } */
 
-  new() {
-    return this.user != null;
-  }
+    new() {
+        return this.user != null;
+    }
 
-  create() {
-    return this.new();
-  }
+    create() {
+        return this.new();
+    }
 
-  show() {
-    return true;
-  }
+    show() {
+        return true;
+    }
 
-  edit() {
-    return this.new() &&  this.record && (this._isOwner() || this._isPremium());
-  }
+    edit() {
+        return this.new() && this.record && (this._isOwner() || this._isPremium());
+    }
 
-  update() {
-    return this.edit();
-  }
+    update() {
+        return this.edit();
+    }
 
-  destroy() {
-    return this.update();
-  }
+    destroy() {
+        return this.update();
+    }
 }

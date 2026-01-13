@@ -1,5 +1,5 @@
-const ApplicationPolicy = require("./application");
+import ApplicationPolicy from "./application";
 
-module.exports = class WikiPolicy extends ApplicationPolicy {
-  
-}
+export default class WikiPolicy extends ApplicationPolicy {
+
+};
